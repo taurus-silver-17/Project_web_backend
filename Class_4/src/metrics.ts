@@ -9,6 +9,11 @@ export class Metric {
     this.timestamp = ts
     this.value = v
   }
+
+  static fromDb(key: string, value: any) {
+    const [type, user, id, timestamp] = key.split(":");
+    return { user: user, id: id, timestamp: timestamp, value: value };
+  }
 }
 
 export class MetricsHandler {
@@ -25,11 +30,14 @@ export class MetricsHandler {
     })}else callback(new Error("there is no key"), null);
   }
 
-  public get(callback: (error: Error | null, result?: Metric[]) => void) {
+  public get(user: string, callback: (error: Error | null, result?: Metric[]) => void) {
     var Data = Array();
     const result = this.db.createReadStream()
     .on('data', function (data) {
-      Data.push(data);
+      let MetricToGet: any;
+      MetricToGet = Metric.fromDb(data.key,data.value);
+      if(MetricToGet.user === user) 
+      Data.push(MetricToGet);
     })
     .on('error', function (err) {
       callback(err,[]);
@@ -42,7 +50,7 @@ export class MetricsHandler {
     })
   }
 
-  public save(key: number, metrics: Metric[], callback: (error: Error | null) => void) {
+  public save(key: string, metrics: Metric[], callback: (error: Error | null) => void) {
     const stream = WriteStream(this.db)
     stream.on('error', callback)
     stream.on('close', callback)
