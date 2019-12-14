@@ -7,6 +7,10 @@ var Metric = /** @class */ (function () {
         this.timestamp = ts;
         this.value = v;
     }
+    Metric.fromDb = function (key, value) {
+        var _a = key.split(":"), type = _a[0], user = _a[1], id = _a[2], timestamp = _a[3];
+        return { user: user, id: id, timestamp: timestamp, value: value };
+    };
     return Metric;
 }());
 exports.Metric = Metric;
@@ -26,11 +30,14 @@ var MetricsHandler = /** @class */ (function () {
         else
             callback(new Error("there is no key"), null);
     };
-    MetricsHandler.prototype.get = function (callback) {
+    MetricsHandler.prototype.get = function (user, callback) {
         var Data = Array();
         var result = this.db.createReadStream()
             .on('data', function (data) {
-            Data.push(data);
+            var MetricToGet;
+            MetricToGet = Metric.fromDb(data.key, data.value);
+            if (MetricToGet.user === user)
+                Data.push(MetricToGet);
         })
             .on('error', function (err) {
             callback(err, []);
