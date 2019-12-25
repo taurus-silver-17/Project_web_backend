@@ -1,0 +1,24 @@
+<div id="form">
+    <h1> Enter your informations !</h1>
+    <form action="/user" method="post">
+        <div class="form-group">
+            <label for= "Email_Entry"> Email </label>
+            <input id = "Email_Entry" type="email" class="form-control" name="email"/> 
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            
+        </div>
+        <div class="form-group">
+            <label for= "Password_Entry"> Password </label>
+            <input id = "Password_Entry" type="password" class="form-control" name="password"/>
+        </div>
+        <div class="form-group">
+            <label for= "Name_Entry" > Name </label>
+            <input id = "Name_Entry" class="form-control" name="username" />
+        </div>
+        <button type="submit" value="Submit"> Sign up </button>
+    </form>
+
+    <button type="submit" href="/login" onclick='document.location.href="/login"'>
+        go back to login
+    </button>
+</div>
