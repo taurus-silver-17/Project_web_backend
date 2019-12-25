@@ -1,5 +1,5 @@
 {
-  "name": "class_3",
+  "name": "nodejsproject",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,8 @@
     "start": "./node_modules/.bin/ts-node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/tsc -p tsconfig.json",
-    "dev": "./node_modules/.bin/nodemon "
+    "dev": "./node_modules/.bin/nodemon ",
+    "populate": ""
   },
   "keywords": [],
   "author": "Lilian Delaplace & Arnaud Jullemier - Millasseau",
