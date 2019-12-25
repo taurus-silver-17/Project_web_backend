@@ -1,7 +1,7 @@
 import express = require('express');
 import { MetricsHandler } from "./metrics";
 
-const dbMet: MetricsHandler = new MetricsHandler("./db/metrics");
+const dbMet: MetricsHandler = new MetricsHandler("../db/metrics");
 const metricsRouter: express.Router = express.Router();
 
 metricsRouter.get("/:id", (req: any, res: any) => {

@@ -5,7 +5,7 @@ import levelSession = require('level-session-store')
 import { UserHandler, User } from './user'
 
 const LevelStore = levelSession(session)
-const dbUser: UserHandler = new UserHandler('./db/users')
+const dbUser: UserHandler = new UserHandler('../db/users')
 const authRouter = express.Router()
 
 const app = express(),handles = require('./handles'), metrics = require("./metrics"), path = require('path'), bodyparser = require('body-parser');
@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: 'my very secret phrase',
-  store: new LevelStore('./db/sessions'),
+  store: new LevelStore('../db/sessions'),
   resave: true,
   saveUninitialized: true
 }))
