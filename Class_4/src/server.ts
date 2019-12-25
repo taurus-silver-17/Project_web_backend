@@ -39,8 +39,8 @@ authRouter.get('/logout', (req: any, res: any) => {
   res.redirect('/login')
 })
 
-authRouter.post('/login', (req: any, res: any, next: any) => {
-  dbUser.get(req.body.username, (err: Error | null, result?: User) => {
+authRouter.post('/login', (req: any, res: any, next: any) => {  
+  dbUser.get(req.body.username, (err: Error | null, result?: User) => {   
     if (err) next(err)
     if (result === undefined || !result.validatePassword(req.body.password)) {
       res.redirect('/login')
@@ -61,7 +61,7 @@ userRouter.post('/', (req: any, res: any, next: any) => {
     } else {
       dbUser.save(req.body, function (err: Error | null) {
         if (err) next(err)
-        else res.status(201).send("user persisted")
+        else res.redirect('/login');
       })
     }
   })
@@ -128,5 +128,5 @@ app.listen(port, (err: Error) => {
   if (err) {
     throw err
   }
-  console.log(`server is listening on port ${port}`)
+  console.log(`server is listening on http://localhost:${port}`)
 })

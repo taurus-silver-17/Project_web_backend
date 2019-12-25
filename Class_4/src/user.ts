@@ -15,7 +15,7 @@ export class User {
       } else this.password = password
     }
 
-    static fromDb(username: string, value: any): User {
+    static fromDb(username: string, value: any): User {        
         const [password, email] = value.split(":");
         return new User(username, email, password);
     }
@@ -29,6 +29,8 @@ export class User {
     }
     
     public validatePassword(toValidate: String): boolean {
+        console.log(this.password,toValidate);
+        
         if (toValidate == this.password) 
             return true;
         else
@@ -39,17 +41,17 @@ export class User {
 
 export class UserHandler {
     public db: any
-  
     public get(username: string, callback: (err: Error | null, result?: User) => void) {
-        this.db.get(`user:${username}`, function (err: Error, data: any) {
+        this.db.get(`user:${username}`, function (err: Error, data: any) {            
             if (err) callback(err)
-            else if (data === undefined) callback(null, data)
-            callback(null, User.fromDb(username, data))
+            else if (data === undefined) callback(null)
+            else callback(null, User.fromDb(username, data))
         })
     }
       
-    public save(user: User, callback: (err: Error | null) => void) {
-        this.db.put(`user:${user.username}`, `${user.getPassword}:${user.email}`, (err: Error | null) => {
+    public save(usr: any, callback: (err: Error | null) => void) {
+        let user = new User(usr.username,usr.email,usr.password);
+        this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
             callback(err)
         })
     }
