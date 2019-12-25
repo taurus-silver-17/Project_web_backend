@@ -1,8 +1,9 @@
 import express = require('express');
 import { MetricsHandler } from "./metrics";
+import { join } from 'path'
 
-const dbMet: MetricsHandler = new MetricsHandler("../db/metrics");
-const metricsRouter: express.Router = express.Router();
+const dbMet: MetricsHandler = new MetricsHandler(join(__dirname, "..", "db", "metrics"))
+const metricsRouter: express.Router = express.Router()
 
 metricsRouter.get("/:id", (req: any, res: any) => {
   dbMet.getOne(`metric:${req.session.user.username}:${req.params.id}`, (err: Error | null, result?: any) => {

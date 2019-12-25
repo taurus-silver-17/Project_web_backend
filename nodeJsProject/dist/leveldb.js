@@ -7,8 +7,11 @@ var LevelDB = /** @class */ (function () {
     function LevelDB() {
     }
     LevelDB.open = function (path) {
-        var encoded = encoding_down_1.default(leveldown_1.default(path), { valueEncoding: 'json' });
-        return levelup_1.default(encoded);
+        var encoded = encoding_down_1.default(leveldown_1.default(path), {
+            valueEncoding: 'json'
+        });
+        this.db = levelup_1.default(encoded);
+        return this.db;
     };
     return LevelDB;
 }());

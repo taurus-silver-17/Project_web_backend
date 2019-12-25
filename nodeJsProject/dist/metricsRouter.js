@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var metrics_1 = require("./metrics");
-var dbMet = new metrics_1.MetricsHandler("./db/metrics");
+var path_1 = require("path");
+var dbMet = new metrics_1.MetricsHandler(path_1.join(__dirname, "..", "db", "metrics"));
 var metricsRouter = express.Router();
 metricsRouter.get("/:id", function (req, res) {
     dbMet.getOne("metric:" + req.session.user.username + ":" + req.params.id, function (err, result) {
