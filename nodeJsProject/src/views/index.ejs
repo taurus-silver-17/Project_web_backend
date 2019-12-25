@@ -1,35 +1,32 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
-<head>
-  <%- include ('partials/head'); %>
-</head>
-
-<body class="container">
-  <div class="col-md-6 col-md-offset-3">
-    <h1>Hello <%= name %> !</h1>
-    <form action="/metrics" method="post">
-      <col>
-      <input id="date" type="date" name="metric_date" />
-      <col />
-      <col>
-      <input id="metricValue" type="number" name="metric_value" />
-      <col />
-      <col>
-      <button class="btn btn-success" id="sendMetrics" onClick=""> Send Values</button>
-      <col />
-    </form>
-    <row>
-      <div>
-        Metrics go here !
-      </div>
-  </div>
-  <div id="metrics"></div>
-  <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>
-    Logout
-  </button>
-  </div>
-</body>
-
+  <head>
+      <%- include ('partials/head'); %>
+  </head>
+  <body class="container">
+        <div class="col-md-6 col-md-offset-3">
+            <h1>Hello <%= name %> !</h1>
+            <form action="/metrics" method="post">
+              <col>
+                <input id="date" type="date" name="metric_date"/>
+              <col/>
+              <col>
+                <input id="metricValue" type="number" name="metric_value"/>
+              <col/>
+              <col>
+                <button class="btn btn-success" id="sendMetrics" onClick=""> Send Values</button>
+              <col/>
+            </form>
+            <row>
+              <div>
+                  Metrics go here !
+              </div>
+            </div>
+            <div id="metrics"></div>
+            <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>
+              Logout
+            </button>
+        </div>  
+    </body>
 </html>

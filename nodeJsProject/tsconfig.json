@@ -8,10 +8,11 @@
     "moduleResolution": "node",
     "noImplicitAny": false
   },
+
   "compileOnSave": true,
+
   "include": [
-    "src/**/*",
-    "src/public"
+    "src/**/*","src/public"
   ],
   "exclude": [
     "node_modules",

@@ -35,7 +35,6 @@ var User = /** @class */ (function () {
         return this.password;
     };
     User.prototype.validatePassword = function (toValidate) {
-        console.log(this.password, toValidate);
         if (toValidate == this.password)
             return true;
         else
@@ -53,14 +52,12 @@ var UserHandler = /** @class */ (function () {
             if (err)
                 callback(err);
             else if (data === undefined)
-                callback(null);
-            else
-                callback(null, User.fromDb(username, data));
+                callback(null, data);
+            callback(null, User.fromDb(username, data));
         });
     };
-    UserHandler.prototype.save = function (usr, callback) {
-        var user = new User(usr.username, usr.email, usr.password);
-        this.db.put("user:" + user.username, user.getPassword() + ":" + user.email, function (err) {
+    UserHandler.prototype.save = function (user, callback) {
+        this.db.put("user:" + user.username, user.getPassword + ":" + user.email, function (err) {
             callback(err);
         });
     };
