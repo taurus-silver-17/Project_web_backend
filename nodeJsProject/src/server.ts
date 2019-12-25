@@ -1,30 +1,43 @@
+// Setup
 import express = require('express')
-import metricsRouter from "./metricsRouter";
+import userRouter from './userRouter'
+import metricsRouter from "./metricsRouter"
 import session = require('express-session')
 import levelSession = require('level-session-store')
+import { join } from 'path'
 import { UserHandler, User } from './user'
 
+const app = express(),
+  handles = require('./handles'),
+  path = require('path'),
+  bodyparser = require('body-parser');
+
+// Config 
+const port: string = process.env.PORT || '8080';
 const LevelStore = levelSession(session)
-const dbUser: UserHandler = new UserHandler('../db/users')
+const dbUser: UserHandler = new UserHandler(join(__dirname, '..', 'db', 'user'))
 const authRouter = express.Router()
 
-const app = express(),handles = require('./handles'), metrics = require("./metrics"), path = require('path'), bodyparser = require('body-parser');
-const port: string = process.env.PORT || '8080';
-
+// Middlewares 
 app.set('views', __dirname + "/views");
 app.set('view engine', 'ejs');
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded());
 
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: 'my very secret phrase',
-  store: new LevelStore('../db/sessions'),
+  store: new LevelStore(join(__dirname, '..', 'db', 'sessions')),
   resave: true,
   saveUninitialized: true
 }))
 
+/*
+** Routers
+*/
+
+// Auth Router (Main)
 authRouter.get('/login', (req: any, res: any) => {
   res.render('login')
 })
@@ -39,8 +52,8 @@ authRouter.get('/logout', (req: any, res: any) => {
   res.redirect('/login')
 })
 
-authRouter.post('/login', (req: any, res: any, next: any) => {  
-  dbUser.get(req.body.username, (err: Error | null, result?: User) => {   
+authRouter.post('/login', (req: any, res: any, next: any) => {
+  dbUser.get(req.body.username, (err: Error | null, result?: User) => {
     if (err) next(err)
     if (result === undefined || !result.validatePassword(req.body.password)) {
       res.redirect('/login')
@@ -51,63 +64,6 @@ authRouter.post('/login', (req: any, res: any, next: any) => {
     }
   })
 })
-
-const userRouter = express.Router()
-
-userRouter.post('/', (req: any, res: any, next: any) => {
-  dbUser.get(req.body.username, function (err: Error | null, result?: User) {
-    if (!err || result !== undefined) {
-     res.status(409).send("user already exists")
-    } else {
-      dbUser.save(req.body, function (err: Error | null) {
-        if (err) next(err)
-        else res.redirect('/login');
-      })
-    }
-  })
-})
-
-userRouter.get('/:username', (req: any, res: any, next: any) => {
-  dbUser.get(req.params.username, function (err: Error | null, result?: User) {
-    if (err || result === undefined) {
-      res.status(404).send("user not found")
-    } else {
-      let Response = { ...result, password: null}
-      res.status(200).json(Response)
-    }
-  })
-})
-
-userRouter.delete('/:username', (req: any, res: any, next: any) => {
-  if (req.params.username == req.session.user.username) {
-    dbUser.delete(req.params.username, function (err: Error | null | string, result?: User){
-      if (err) {
-        res.status(404).send(err);
-      }
-      else{
-        res.status(200).send(result);
-      }
-    })
-  }
-  else {
-    res.status(401).send("You can only delete your account.");
-  }
-}) 
-
-userRouter.put("/:username", (req: any, res: any, next: any) => {
-  if (req.params.username === req.session.user.username) {
-    dbUser.put(`${req.params.username}`,function(err: Error | null | string, result?: User) {
-      if (err != null) {
-        res.status(404).send(err)
-      }
-      else 
-        res.status(200).json(result);
-    }, req.body ? req.body.email : undefined, req.body ? req.body.password : undefined)
-  }
-  else
-    res.status(401).send("You can't do that.")
-})
-
 
 const authCheck = function (req: any, res: any, next: any) {
   if (req.session.loggedIn) {
