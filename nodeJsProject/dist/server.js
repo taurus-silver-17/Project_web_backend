@@ -17,7 +17,7 @@ var session = require("express-session");
 var levelSession = require("level-session-store");
 var user_1 = require("./user");
 var LevelStore = levelSession(session);
-var dbUser = new user_1.UserHandler('./db/users');
+var dbUser = new user_1.UserHandler('../db/users');
 var authRouter = express.Router();
 var app = express(), handles = require('./handles'), metrics = require("./metrics"), path = require('path'), bodyparser = require('body-parser');
 var port = process.env.PORT || '8080';
@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: 'my very secret phrase',
-    store: new LevelStore('./db/sessions'),
+    store: new LevelStore('../db/sessions'),
     resave: true,
     saveUninitialized: true
 }));
@@ -69,7 +69,7 @@ userRouter.post('/', function (req, res, next) {
                 if (err)
                     next(err);
                 else
-                    res.status(201).send("user persisted");
+                    res.redirect('/login');
             });
         }
     });
@@ -131,5 +131,5 @@ app.listen(port, function (err) {
     if (err) {
         throw err;
     }
-    console.log("server is listening on port " + port);
+    console.log("server is listening on http://localhost:" + port);
 });

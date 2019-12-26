@@ -50,14 +50,12 @@ export class MetricsHandler {
     })
   }
 
-  public save(key: string, metrics: Metric[], callback: (error: Error | null) => void) {
-    const stream = WriteStream(this.db)
-    stream.on('error', callback)
-    stream.on('close', callback)
-    metrics.forEach((m: Metric) => {
-      stream.write({ key: `metric:${key}${m.timestamp}`, value: m.value })
+  public save(key: string, metrics: any, callback: (error: Error | null) => void) {
+    let metric = new Metric(metrics.metric_date,metrics.metric_value);
+    console.log(metrics.metric_date + " " + metrics.metric_value)
+    this.db.put(`user:${key}`, `${metrics.metric_date}:${metrics.metric_value}`, (err: Error | null) => {
+        callback(err)
     })
-    stream.end()
   }
 
   public delete(key: string, callback: (error: Error | null, result: any) => void) {

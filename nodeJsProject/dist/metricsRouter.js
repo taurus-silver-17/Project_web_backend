@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var metrics_1 = require("./metrics");
-var dbMet = new metrics_1.MetricsHandler("./db/metrics");
+var dbMet = new metrics_1.MetricsHandler("../db/metrics");
 var metricsRouter = express.Router();
 metricsRouter.get("/:id", function (req, res) {
     dbMet.getOne("metric:" + req.session.user.username + ":" + req.params.id, function (err, result) {
@@ -22,7 +22,7 @@ metricsRouter.get("/", function (req, res) {
             res.status(200).send(result);
     });
 });
-metricsRouter.post("/:id", function (req, res) {
+metricsRouter.post("/", function (req, res) {
     dbMet.save(req.session.user.username + ":" + req.params.id, req.body, function (err) {
         if (err)
             res.status(500).send(err);
