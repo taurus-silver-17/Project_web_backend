@@ -1,77 +1,138 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-      <%- include ('partials/head'); %>
-  </head>
-  <body class="container">
-        <div class="col-md-6 col-md-offset-3">
-            <h1>Hello <%= name %> !</h1>
-            <form action="/metrics" method="post">
-              <col>
-                <input id="date" type="date" name="metric_date"/>
-              <col/>
-              <col>
-                <input id="metricValue" type="number" name="metric_value"/>
-              <col/>
-              <col>
-                <button class="btn btn-success" id="sendMetrics" onClick=""> Send Values</button>
-              <col/>
-              <col>
-                <small  class="form-text text-muted">sending a date that already exist modify it's value !</small>
-              <col/>
-            </form>
-            <div>
-              <h2> All your metrics are here : </h2>
-              <canvas style="margin-top: 80px; display: block; height: 624px; width: 1110px;" id="line-chart" width="800" height="780"></canvas>            </div>
-              <h2> List of metrics :</h2>
-              
-            </div>
-            <div id="metrics"></div>
-            <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>
-              Logout
-            </button>
-        </div> 
-        <script>
-          window.onload = function () {
-              fetch("/metrics", {
-                method: "GET",
-              }).then((res) => {
-                return res.json();
-              }).then((data) => {
-                let labels = data.map((element) => {
-                  return element.timestamp
-                })
-                let values = data.map((element) => {
-                  return element.value;
-                })
-                new Chart(document.getElementById("line-chart"), {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [
-                {
-                  label: "date",
-                  data: values,
-                  fill: false,
-                }
-            ]},
-            options: {
-              title: {
-                display: true,
-                text: 'test'
+
+<head>
+  <%- include ('partials/head'); %>
+</head>
+
+<body class="container">
+  <div class="col-md-6 col-md-offset-3">
+    <h1>Hello <%= name %> !</h1>
+    <form id="form">
+      <col>
+      <input id="date" type="date" name="metric_date" />
+      <col />
+      <col>
+      <input id="metricValue" type="number" name="metric_value" />
+      <col />
+      <col>
+      <button class="btn btn-success" id="sendMetrics" onClick=""> Send Values</button>
+      <col />
+      <col>
+      <small class="form-text text-muted">sending a date that already exist modify it's value !</small>
+      <col />
+    </form>
+    <div>
+      <h2> All your metrics are here : </h2>
+      <canvas style="margin-top: 80px; display: block; height: 624px; width: 1110px;" id="line-chart" width="800"
+        height="780"></canvas>
+    </div>
+    <h2> List of metrics :</h2>
+
+  </div>
+  <div id="metrics"></div>
+  <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>
+    Logout
+  </button>
+  </div>
+  <script>
+    window.onload = function () {
+      fetch("/metrics", {
+        method: "GET",
+      }).then((res) => {
+        return res.json();
+      }).then((data) => {
+        let labels = data.map((element) => {
+          return element.timestamp
+        })
+        let values = data.map((element) => {
+          return element.value;
+        })
+        new Chart(document.getElementById("line-chart"), {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "date",
+                data: values,
+                fill: false,
               }
+            ]
+          },
+          options: {
+            title: {
+              display: true,
+              text: 'test'
             }
-          });
-                $("#metrics").empty();
-                data.forEach(element => {
-                  $("#metrics").append(
-                    `<div>${element.user},${element.timestamp},${element.value}</div>`
-                  )
-                });
-              })
           }
-        </script> 
-    </body>
-    
+        });
+        $("#metrics").empty();
+        data.forEach(element => {
+          $("#metrics").append(
+            `<div>${element.user},${element.timestamp},${element.value}</div>`
+          )
+        });
+      })
+    }
+
+    $("#form").submit(e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const date = new Date(formData.get("metric_date"))
+      fetch("/metrics", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            metric_date: date,
+            metric_value: formData.get("metric_value")
+          }
+        ])
+      }).then(function (response) {
+        fetch("/metrics", {
+        method: "GET",
+      }).then((res) => {
+        return res.json();
+      }).then((data) => {
+        let labels = data.map((element) => {
+          return element.timestamp
+        })
+        let values = data.map((element) => {
+          return element.value;
+        })
+        new Chart(document.getElementById("line-chart"), {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "date",
+                data: values,
+                fill: false,
+              }
+            ]
+          },
+          options: {
+            title: {
+              display: true,
+              text: 'test'
+            }
+          }
+        });
+        $("#metrics").empty();
+        data.forEach(element => {
+          $("#metrics").append(
+            `<div>${element.user},${element.timestamp},${element.value}</div>`
+          )
+        });
+      })
+      });
+    });
+  </script>
+</body>
+
 </html>

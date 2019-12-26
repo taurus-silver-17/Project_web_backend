@@ -21,13 +21,12 @@ metricsRouter.get("/", (req: any, res: any) => {
   });
 });
 
-metricsRouter.post("/", (req: any, res: any, next: any) => {
+metricsRouter.post("/", (req: any, res: any, next: any) => {  
   dbMet.save(`${req.session.user.username}`, req.body, (err: Error | null) => {
     if (err) 
       res.status(500).send(err);
     else    
       res.status(200).send();
-      res.redirect('/');
   });
 });
 

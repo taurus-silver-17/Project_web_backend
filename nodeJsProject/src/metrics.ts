@@ -48,8 +48,8 @@ export class MetricsHandler {
   }
 
   public save(key: string, metrics: any, callback: (error: Error | null) => void) {
-    let metric = new Metric(metrics.metric_date,metrics.metric_value);
-    this.db.put(`metrics:${key}:${metrics.metric_date}`, `${metrics.metric_value}`, (err: Error | null) => {
+    let metric = new Metric(metrics[0].metric_date,metrics[0].metric_value);        
+    this.db.put(`metrics:${key}:${metric.timestamp}`, `${metric.value}`, (err: Error | null) => {
         callback(err)
     })
   }
