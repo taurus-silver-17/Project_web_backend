@@ -22,8 +22,8 @@ metricsRouter.get("/", function (req, res) {
             res.status(200).send(result);
     });
 });
-metricsRouter.post("/", function (req, res) {
-    dbMet.save(req.session.user.username + ":" + req.params.id, req.body, function (err) {
+metricsRouter.post("/", function (req, res, next) {
+    dbMet.save("" + req.session.user.username, req.body, function (err) {
         if (err)
             res.status(500).send(err);
         else

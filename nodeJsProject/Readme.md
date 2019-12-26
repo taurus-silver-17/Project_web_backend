@@ -12,8 +12,11 @@ Then, use npm install to download all the dependencies and finally, use npm star
 - npm run build
 - npm start
 - npm run dev
-- npm run populate
-- npm test
+
+## users witch already exists :
+
+- username : guy , pswd : guy
+- username : person , pswd : person
 
 ## How to use the server
 

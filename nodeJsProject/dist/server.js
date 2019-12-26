@@ -11,20 +11,23 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// Setup
 var express = require("express");
 var metricsRouter_1 = require("./metricsRouter");
 var session = require("express-session");
 var levelSession = require("level-session-store");
 var user_1 = require("./user");
+var app = express(), handles = require('./handles'), path = require('path'), bodyparser = require('body-parser');
+// Config 
+var port = process.env.PORT || '8080';
 var LevelStore = levelSession(session);
 var dbUser = new user_1.UserHandler('../db/users');
 var authRouter = express.Router();
-var app = express(), handles = require('./handles'), metrics = require("./metrics"), path = require('path'), bodyparser = require('body-parser');
-var port = process.env.PORT || '8080';
+// Middlewares 
 app.set('views', __dirname + "/views");
 app.set('view engine', 'ejs');
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded());
+app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -33,6 +36,10 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+/*
+** Routers
+*/
+// Auth Router (Main)
 authRouter.get('/login', function (req, res) {
     res.render('login');
 });

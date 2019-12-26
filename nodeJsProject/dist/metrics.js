@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var leveldb_1 = require("./leveldb");
-var level_ws_1 = require("level-ws");
 var Metric = /** @class */ (function () {
     function Metric(ts, v) {
         this.timestamp = ts;
         this.value = v;
     }
     Metric.fromDb = function (key, value) {
-        var _a = key.split(":"), type = _a[0], user = _a[1], id = _a[2], timestamp = _a[3];
-        return { user: user, id: id, timestamp: timestamp, value: value };
+        var _a = key.split(":"), type = _a[0], user = _a[1], timestamp = _a[2];
+        return { user: user, timestamp: timestamp, value: value };
     };
     return Metric;
 }());
@@ -44,19 +43,13 @@ var MetricsHandler = /** @class */ (function () {
         })
             .on('close', function () {
             callback(null, Data);
-        })
-            .on('end', function () {
-            console.log('Stream ended');
         });
     };
     MetricsHandler.prototype.save = function (key, metrics, callback) {
-        var stream = level_ws_1.default(this.db);
-        stream.on('error', callback);
-        stream.on('close', callback);
-        metrics.forEach(function (m) {
-            stream.write({ key: "metric:" + key + m.timestamp, value: m.value });
+        var metric = new Metric(metrics[0].metric_date, metrics[0].metric_value);
+        this.db.put("metrics:" + key + ":" + metric.timestamp, "" + metric.value, function (err) {
+            callback(err);
         });
-        stream.end();
     };
     MetricsHandler.prototype.delete = function (key, callback) {
         this.db.del(key, function (err, res) {
