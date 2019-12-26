@@ -15,8 +15,7 @@ Then, use npm install to download all the dependencies and finally, use npm star
 
 ## users witch already exists :
 
-- username : guy , pswd : guy
-- username : person , pswd : person
+- No users have been created, to allow testing of the signup/signin functions ! (lack of prepopulation)
 
 ## How to use the server
 
