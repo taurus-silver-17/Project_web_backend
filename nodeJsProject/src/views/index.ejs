@@ -25,9 +25,7 @@
               <h2> All your metrics are here : </h2>
               <canvas style="margin-top: 80px; display: block; height: 624px; width: 1110px;" id="line-chart" width="800" height="780"></canvas>            </div>
               <h2> List of metrics :</h2>
-              <li>
-
-              </li>
+              
             </div>
             <div id="metrics"></div>
             <button class="btn btn-danger" href="/logout" onClick='document.location.href="/logout"'>
@@ -47,12 +45,10 @@
                   label: "Population (millions)",
                   backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
                   data: [2478,5267,734,784,433],
-                  fill: false
+                  fill: false,
                 }
-              ]
-            },
+            ]},
             options: {
-              legend: { display: false },
               title: {
                 display: true,
                 text: 'test'
