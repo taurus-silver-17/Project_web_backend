@@ -1,21 +1,28 @@
+// Setup
 import express = require('express')
 import metricsRouter from "./metricsRouter";
 import session = require('express-session')
 import levelSession = require('level-session-store')
 import { UserHandler, User } from './user'
 
+const app = express(),
+  handles = require('./handles'),
+  path = require('path'),
+  bodyparser = require('body-parser');
+
+// Config 
+const port: string = process.env.PORT || '8080';
 const LevelStore = levelSession(session)
 const dbUser: UserHandler = new UserHandler('../db/users')
 const authRouter = express.Router()
 
-const app = express(),handles = require('./handles'), metrics = require("./metrics"), path = require('path'), bodyparser = require('body-parser');
-const port: string = process.env.PORT || '8080';
 
+// Middlewares 
 app.set('views', __dirname + "/views");
 app.set('view engine', 'ejs');
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded());
 
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -25,6 +32,11 @@ app.use(session({
   saveUninitialized: true
 }))
 
+/*
+** Routers
+*/
+
+// Auth Router (Main)
 authRouter.get('/login', (req: any, res: any) => {
   res.render('login')
 })
