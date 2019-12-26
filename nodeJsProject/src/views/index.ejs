@@ -23,8 +23,7 @@
             </form>
             <div>
               <h2> All your metrics are here : </h2>
-              <canvas id="bar-chart" width="800" height="450"></canvas>
-            </div>
+              <canvas style="margin-top: 80px; display: block; height: 624px; width: 1110px;" id="line-chart" width="800" height="780"></canvas>            </div>
               <h2> List of metrics :</h2>
               <li>
 
@@ -36,15 +35,19 @@
             </button>
         </div> 
         <script>
-          new Chart(document.getElementById("bar-chart"), {
-            type: 'bar',
+          window.onload = function() {
+            console.log("here");
+            
+            new Chart(document.getElementById("line-chart"), {
+            type: 'line',
             data: {
               labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
               datasets: [
                 {
                   label: "Population (millions)",
                   backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                  data: [2478,5267,734,784,433]
+                  data: [2478,5267,734,784,433],
+                  fill: false
                 }
               ]
             },
@@ -52,10 +55,11 @@
               legend: { display: false },
               title: {
                 display: true,
-                text: 'Predicted world population (millions) in 2050'
+                text: 'test'
               }
             }
           });
+          }
         </script> 
     </body>
     
