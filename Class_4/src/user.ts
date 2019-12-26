@@ -28,9 +28,7 @@ export class User {
         return this.password
     }
     
-    public validatePassword(toValidate: String): boolean {
-        console.log(this.password,toValidate);
-        
+    public validatePassword(toValidate: String): boolean {        
         if (toValidate == this.password) 
             return true;
         else

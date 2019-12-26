@@ -16,13 +16,13 @@ metricsRouter.get("/", (req: any, res: any) => {
   dbMet.get(req.session.user.username, (err: Error | null, result?: any) => {
     if (err) {
         res.status(500).send(err);
-    } else 
+    } else     
         res.status(200).send(result);
   });
 });
 
 metricsRouter.post("/", (req: any, res: any, next: any) => {
-  dbMet.save(`${req.session.user.username}:${req.params.id}`, req.body, (err: Error | null) => {
+  dbMet.save(`${req.session.user.username}`, req.body, (err: Error | null) => {
     if (err) 
       res.status(500).send(err);
     else    

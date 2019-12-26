@@ -11,8 +11,8 @@ export class Metric {
   }
 
   static fromDb(key: string, value: any) {
-    const [type, user, id, timestamp] = key.split(":");
-    return { user: user, id: id, timestamp: timestamp, value: value };
+    const [type, user, timestamp] = key.split(":");
+    return { user: user, timestamp: timestamp, value: value };
   }
 }
 
@@ -35,9 +35,9 @@ export class MetricsHandler {
     const result = this.db.createReadStream()
     .on('data', function (data) {
       let MetricToGet: any;
-      MetricToGet = Metric.fromDb(data.key,data.value);
+      MetricToGet = Metric.fromDb(data.key,data.value);      
       if(MetricToGet.user === user) 
-      Data.push(MetricToGet);
+      Data.push(MetricToGet);      
     })
     .on('error', function (err) {
       callback(err,[]);
@@ -45,15 +45,11 @@ export class MetricsHandler {
     .on('close', function() {
       callback(null,Data)
     })
-    .on('end', function () {
-      console.log('Stream ended')
-    })
   }
 
   public save(key: string, metrics: any, callback: (error: Error | null) => void) {
     let metric = new Metric(metrics.metric_date,metrics.metric_value);
-    console.log(metrics.metric_date + " " + metrics.metric_value)
-    this.db.put(`user:${key}`, `${metrics.metric_date}:${metrics.metric_value}`, (err: Error | null) => {
+    this.db.put(`metrics:${key}:${metrics.metric_date}`, `${metrics.metric_value}`, (err: Error | null) => {
         callback(err)
     })
   }

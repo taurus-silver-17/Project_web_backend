@@ -33,18 +33,26 @@
             </button>
         </div> 
         <script>
-          window.onload = function() {
-            console.log("here");
-            
-            new Chart(document.getElementById("line-chart"), {
+          window.onload = function () {
+              fetch("/metrics", {
+                method: "GET",
+              }).then((res) => {
+                return res.json();
+              }).then((data) => {
+                let labels = data.map((element) => {
+                  return element.timestamp
+                })
+                let values = data.map((element) => {
+                  return element.value;
+                })
+                new Chart(document.getElementById("line-chart"), {
             type: 'line',
             data: {
-              labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+              labels: labels,
               datasets: [
                 {
-                  label: "Population (millions)",
-                  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                  data: [2478,5267,734,784,433],
+                  label: "date",
+                  data: values,
                   fill: false,
                 }
             ]},
@@ -55,6 +63,13 @@
               }
             }
           });
+                $("#metrics").empty();
+                data.forEach(element => {
+                  $("#metrics").append(
+                    `<div>${element.user},${element.timestamp},${element.value}</div>`
+                  )
+                });
+              })
           }
         </script> 
     </body>
